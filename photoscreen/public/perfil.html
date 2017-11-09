@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Post</title>
+  </head>
+  <body>
+    <main>
+
+        <section>
+          <div id="usuario">
+            <h1 id="nome_usuario"></h1>
+            <img id="imagem_usuario" src="" alt="">
+          </div>
+
+          <div id="valores">
+            <div id="posts_val">
+              <h2></h2>
+              <p>Posts</p>
+            </div>
+            <div id="seguidores_val">
+              <h2></h2>
+              <p>Seguidores</p>
+            </div>
+            <div id="seguindo_val">
+              <h2></h2>
+              <p>Seguindo</p>
+            </div>
+          </div>
+
+          <p id="descricao"></p>
+        </section>
+    </main>
+
+    <script src="javascripts/jquery.js" charset="utf-8"></script>
+    <script src="javascripts/system.js" charset="utf-8"></script>
+    <script src="javascripts/logged.js" charset="utf-8"></script>
+    <script type="text/javascript">
+    let parametro = window.location.search.replace('?','');
+    $.get('/users/'+parametro+'.json',function(data){
+      console.log(data);
+      $('#nome_usuario').html(data.nome);
+      $("#imagem_usuario")[0].src = data.foto_perfil;
+
+      $('#posts_val h2').html(data.posts.length);
+      $('#seguidores_val h2').html(data.seguidores.length);
+      $('#seguindo_val h2').html(data.seguindo.length);
+
+      $('#descricao').html(data.extras.descricao);
+    })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="stylesheets/style.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="stylesheets/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  </head>
+  <body>
+
+    <main id="upload-foto">
+      <input type="file" id="image_input"><br><br>
+      <label>Titulo: <input type="text" id="titulo_input"></label>
+      <label>Descrição: <input type="text" id="descript_input"></label><br>
+      <label>Categorias: <div class="chips" data-initialized="true" data-index="0"></div></label><br>
+      <button type="button" id="upload_image_bt">Enviar</button><br>
+    </main>
+    <br><br><br>
+    <main id="upload-texto">
+      <button type="button" id="upload_texto_bt">Enviar</button>
+    </main>
+
+    <script src="javascripts/jquery.js" charset="utf-8"></script>
+    <script src="javascripts/materialize.js"></script>
+    <script src="javascripts/init.js"></script>
+    <script src="javascripts/system.js" charset="utf-8"></script>
+    <script src="javascripts/logged.js" charset="utf-8"></script>
+    <script src="javascripts/upload.js" charset="utf-8"></script>
+  </body>
+</html>

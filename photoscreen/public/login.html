@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Materialize</title>
+
+  <!-- CSS  -->
+  <link href="stylesheets/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+
+
+  <div id="index-banner" class="parallax-container">
+
+      <div class="container">
+        <br><br>
+        <div id="login-card" class="row card">
+          <a href="pagina_inicial.html"><h1 id="title" class="header center teal-text text-lighten-2 fix-navbar">PhotoScreen</h1></a>
+          <form class="col s4 offset-m4 center">
+            <div class="row center">
+              <div class="input-field inline col s12">
+                <input id="usuario" type="email" class="validate">
+                <label for="email" data-error="Formato inválido" data-success="Correto">Email:</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field inline col s12">
+                <input id="senha" type="password" class="validate">
+                <label for="senha">Senha:</label>
+              </div>
+            </div>
+            <div class="row">
+              <input type="checkbox" id="local" />
+              <label for="local">Manter conectado</label>
+            </div>
+            <div class="row center">
+              <div id="login" class="col s12">
+                <a id="submit-login" class="btn-large waves-effect waves-light teal lighten-1">Entrar</a><br>
+                <p id="registro" class="black-text">Não possui conta ainda? Cadastre-se <a id="registro" class="icon-text" href="inscrever.html">aqui</a> !</p>
+              </div>
+            </div>
+            <br><br>
+          </form>
+        </div>
+
+        <div class="parallax">
+          <img src="images/background1.jpg" alt="Unsplashed background img 1">
+        </div>
+      </div>
+    </div>
+
+  <footer class="page-footer teal">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">Desenvolvedores</h5>
+          <ul>
+            <li>Isabela Fernanda Campos Emiliano</li>
+            <li>Maria Eduarda Rodrigues Pasquel</li>
+            <li>Juan Vitor Saar Silvério</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Made by <a class="icon-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!--  Scripts-->
+  <script src="javascripts/jquery.js" charset="utf-8"></script>
+  <script src="javascripts/materialize.js"></script>
+  <script src="javascripts/init.js"></script>
+  <script src="javascripts/system.js" charset="utf-8"></script>
+  <script src="javascripts/logged.js" charset="utf-8"></script>
+  <script type="text/javascript">
+
+    $('#submit-login').click(function(){
+      let obj = {user: $('#usuario').val(), pass: $('#senha').val()}
+      login(function(resultado){
+        obj.user = resultado;
+        console.log(resultado);
+
+        obj = btoa(JSON.stringify(obj));
+        if($('#local').is(':checked')) localStorage.setItem('data',obj);
+        else sessionStorage.setItem('data',obj);
+        location.replace('index.html');
+
+      },obj,function(data){
+        console.log(data);
+        alert("Usuario e/ou senha estão incorretos!");
+      });
+    });
+
+  </script>
+
+  </body>
+</html>

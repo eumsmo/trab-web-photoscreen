@@ -1,0 +1,328 @@
+/**/
+div.post-imagem.card{
+  width: 100%;
+}
+
+#enviar-comentario{
+  float: right;
+  margin-bottom: 10px;
+}
+
+.comentarios{
+  clear: both;
+}
+
+#post-hold{
+  /*width: 400px;*/
+}
+
+.post-imagem .imagem-descricao img{
+  width: 100%;
+}
+
+.post-holder:hover .descricao-holder{opacity: 1;}
+
+.descricao-holder{
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+
+.descricao-holder p{
+
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 2em !important;
+
+}
+
+.post-inf p{
+  text-align: right;
+  font-family: "Roboto",cursive;
+  color: grey;
+  font-size: 1.5em;
+  margin-right: 1em;
+}
+
+.post-inf h1{
+  font-size: 2em;
+}
+
+.imagem-descricao{
+  overflow: hidden;
+
+  width: 100%;
+}
+
+
+.post-inf{
+  padding: 8px;
+}
+
+
+
+.post-inf h1, .post-inf p{margin: 0;}
+
+.interacao{
+  display: flex;
+  justify-content: space-around;
+}
+
+.post-inf footer > p{
+  text-align: right;
+  color: grey;
+}
+
+.descricao-holder{
+  font-size: 1em;
+  color: white;
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
+  background-color:  rgba(0, 0, 0, 0.50);
+
+  padding: 8px;
+  position: absolute;
+  bottom: 7px;
+
+}
+
+
+.post-imagem .imagem-descricao{
+  position: relative;
+}
+
+
+
+.post-holder.floating .post-imagem .imagem-descricao p{
+
+  font-size: 3em;
+  line-height: 1.25em;
+  text-align: center;
+  height: 100%;
+
+  overflow:hidden !important;
+
+}
+
+.post-holder.floating .interacao {
+  display: none;
+}
+
+.post-principal{
+  width: 50%;
+  margin: 1em auto;
+}
+/*
+div {
+  height: 200px;
+  line-height: 200px;
+  text-align: center;
+  border: 2px dashed #f69c55;
+}
+span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+}
+*/
+
+
+
+/* DUDA */
+/* Custom Stylesheet */
+/**
+* Use this file to override Materialize files so you can update
+* the core Materialize files in the future
+*
+* Made By MaterializeCSS.com
+*/
+
+nav ul a,
+nav .brand-logo {
+ color: white;
+}
+
+#logo-container {
+ color:#4db6ac;
+}
+
+body {
+ background-size: auto 100%;
+ background-repeat: no-repeat;
+ background-position: center;
+}
+h1{
+ font-size: 3em;
+}
+
+.page-footer{
+ height: 100%;
+}
+
+.icon-text {
+ color:#9575cd;
+}
+
+.btn-purple {
+  background-color:#9575cd;
+}
+
+.btn-purple:hover {
+  background-color:#ff0000;
+}
+
+p {
+ line-height: 2rem;
+}
+
+a {
+ font-size: 20px;
+}
+
+input {
+ color: black;
+}
+
+img{
+ width: 20%;
+}
+
+.background img{
+  width: 100%;
+  height: 100%;
+}
+
+#login-card {
+ margin: 10.8%;
+}
+
+#foto-usuario {
+ margin-right: 8px;
+ margin-left: 10px;
+ margin-top: 2px;
+ width: 60px;
+ height: 60px;
+ display: inline;
+}
+
+#title {
+ padding: 5%;
+}
+
+#icon {
+  display: none;
+}
+
+#login {
+ padding: 5%;
+}
+
+#nome-usuario{
+ display: inline;
+}
+
+#registro {
+ font-size: 15px;
+}
+
+.fix-navbar {
+ height: 100%;
+}
+
+#acesso-rapido{
+ float: left;
+}
+
+.nav-screen{
+ color: #9575cd;
+ margin-left: 5px;
+}
+
+#nav-mobile li {
+ background-color: #9575cd;
+ margin-bottom: 5px;
+}
+
+.post > img {
+  width: 100%;
+}
+
+.button-collapse {
+ color: #26a69a;
+}
+
+.letra-pequena{
+ font-size: 15px;
+}
+
+.parallax-container {
+ min-height: 380px;
+ line-height: 0;
+ height: auto;
+ color: rgba(255,255,255,.9);
+}
+ .parallax-container .section {
+   width: 100%;
+ }
+
+@media only screen and (max-width : 992px) {
+ .parallax-container .section {
+   position: absolute;
+   top: 40%;
+ }
+ #index-banner .section {
+   top: 10%;
+ }
+}
+
+@media only screen and (max-width : 600px) {
+ li{
+   margin-bottom: 3px;
+ }
+ #index-banner .section {
+   margin-bottom: 2px;
+   top: 0;
+ }
+
+
+ #senha, #login, #email, #entrar{
+   text-align: center;
+ }
+
+}
+
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 480px)
+and (-webkit-min-device-pixel-ratio: 2) {
+
+  #title {
+    font-size: 35px;
+  }
+
+  #btn {
+    height: 35px;
+    line-height: 35px;
+    width: 90px;
+  }
+
+  #icon {
+    display: inline;
+  }
+
+  #login-text{
+    display: none;
+  }
+}
+
+.icon-block {
+ padding: 0 15px;
+}
+.icon-block .material-icons {
+ font-size: inherit;
+}
+
+footer.page-footer {
+ margin: 0;
+}

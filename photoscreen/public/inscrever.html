@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cadastro</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="stylesheets/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+
+<body>
+
+  <div id="index-banner" class="parallax-container">
+
+      <div class="container">
+        <br><br>
+        <div id="login-card" class="row card">
+          <a href="pagina_inicial.html"><h1 id="title" class="header center teal-text text-lighten-2 fix-navbar">PhotoScreen</h1></a>
+          <form class="col s4 offset-m4 center">
+            <div class="row center">
+              <div class="row">
+              <div class="input-field inline col s12">
+                <input id="username_input" type="text" class="validate">
+                <label for="nome" data-error="Formato inválido" data-success="Correto">Nome de Usuário:</label>
+              </div>
+            </div>
+              <div class="input-field inline col s12">
+                <input id="email_input" type="email" class="validate">
+                <label for="email" data-error="Formato inválido" data-success="Correto">Email:</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field inline col s12">
+                <input id="password_input" type="password" class="validate">
+                <label for="senha" data-error="Formato inválido" data-success="Correto">Senha:</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field inline col s12">
+                <input id="c-senha" type="password" class="validate">
+                <label for="c-senha" data-error="Formato inválido" data-success="Correto">Confirmar Senha:</label>
+              </div>
+            </div>
+            <div class="row center">
+              <div id="login" class="col s12">
+                <a id="send" class="btn-large waves-effect waves-light teal lighten-1">Cadastrar</a><br>
+              </div>
+            </div>
+            <br><br>
+          </form>
+        </div>
+
+        <div class="parallax">
+          <img src="images/background1.jpg" alt="Unsplashed background img 1">
+        </div>
+      </div>
+  </div>
+
+  <footer class="page-footer teal">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">Desenvolvedores</h5>
+          <ul>
+            <li>Isabela Fernanda Campos Emiliano</li>
+            <li>Maria Eduarda Rodrigues Pasquel</li>
+            <li>Juan Vitor Saar Silvério</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Made by <a class="icon-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="javascripts/jquery.js" charset="utf-8"></script>
+  <script src="javascripts/materialize.js"></script>
+  <script src="javascripts/init.js"></script>
+  <script src="javascripts/system.js" charset="utf-8"></script>
+  <script src="javascripts/newUser.js" charset="utf-8"></script>
+
+  </body>
+</html>

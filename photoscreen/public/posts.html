@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Document</title>
+    <link rel="stylesheet" href="stylesheets/materialize.css" >
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  </head>
+  <body>
+
+    <nav id="nav">
+
+    </nav>
+
+    <main class="post-principal card">
+      <main class="post-holder ">
+        <div class="post-imagem ">
+
+          <section class="imagem-descricao">
+            <img src='images/undefined.jpg'>
+            <div class="descricao-holder">
+
+              <p id="descricao">EU SOU UM TEXTO E EU DEVIA TÁ CENTRALIZADO</p>
+            </div>
+
+          </section>
+
+          <section class="post-inf">
+            <h1> TITULO AQUI</h1>
+            <footer>
+              <p>~usuario aqui</p>
+              <div class="interacao">
+                <p class="curtir"><i class="material-icons small">favorite</i> Curtir </p>
+                <p class="comentar"><i class="material-icons small">mode_comment</i> Comentarios </p>
+              </div>
+            </footer>
+
+          </section>
+
+        </div>
+      </main>
+    </main>
+
+    <main class="container">
+        <div class="input-field col s6">
+              <i class="material-icons prefix">mode_edit</i>
+              <textarea id="icon_prefix2" class="materialize-textarea comentario-input"></textarea>
+              <label for="icon_prefix2">Comentario</label>
+              <button id="enviar-comentario" type="button" class="waves-effect waves-light btn">Enviar</button>
+        </div>
+
+        <ul class="collection comentarios">
+
+          <li class="collection-item avatar">
+            <img src="images/undefined.jpg" alt="" class="circle">
+            <span class="title">Usuario </span>
+            <p>
+              Comentario
+            </p>
+            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+          </li>
+
+      </ul>
+    </main>
+
+    <script src="javascripts/jquery.js" charset="utf-8"></script>
+    <script src="javascripts/materialize.js"></script>
+    <script src="javascripts/init.js"></script>
+    <script src="javascripts/system.js" charset="utf-8"></script>
+    <script src="javascripts/logged.js" charset="utf-8"></script>
+    <script type="text/javascript">
+    let parametro = window.location.search.slice(1),
+        cache_com = [], comentarios =[];
+
+    $('#nav').load('nav.html');
+
+    $.get('/post/'+parametro+'.json',function(data){
+      console.log(data);
+      $('.imagem-descricao img').attr('src','post/'+parametro+'.jpg');
+      $('.imagem-descricao #descricao').html(data.texto);
+      $('.post-inf h1').html(data.titulo);
+
+      ler.idToUser(data.inf.por,function(ret){
+        console.log(ret);
+        $('.post-inf footer> p').html('<a href="perfil.html?'+data.inf.por+'">~'+ret+'</a>');
+      });
+    });
+
+    function updateComments(){
+
+      function compareArray(arr1,arr2){
+        if(arr1.length != arr2.length) return false;
+        for(let i = arr1.length; i >= 0; i--)
+          if(arr1[i] != arr2[i]) return false;
+        return true;
+      }
+
+      $.get('/post/'+parametro+'.val',function(data){
+        comentarios = data.comentarios;
+        if(!compareArray(comentarios, cache_com)){
+          cache_com = comentarios;
+          for (let com of comentarios) {
+            let
+            console.log('+'+com);
+          }
+        }
+      });
+    }
+
+    $('#enviar-comentario').click(function(){
+      comentar(OBJ_ACCOUNT, parametro, $('.comentario-input')[0].value,function(data){
+        console.log(data);
+      });
+    });
+
+    setInterval(updateComments,1000);
+    </script>
+  </body>
+</html>
