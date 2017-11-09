@@ -3,7 +3,6 @@ Repositorio com os arquivos da aplicação web + back-end.
 
 ## Diretórios:
 * **/:** Diretório gerado com *express-generator* e adição de diretórios extras
-* **/db:** Diretório do MongoDB
 * **/public:** Diretório com o front-end do site
 * **/model:** Diretório com as estruturas que cada 'collection' (MongoDB) deve ter
 * **/layout:** Diretório com as ideias iniciais do layout
