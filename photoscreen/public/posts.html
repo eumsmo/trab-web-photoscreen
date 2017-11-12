@@ -53,14 +53,6 @@
 
         <ul class="collection comentarios">
 
-          <li class="collection-item avatar">
-            <img src="images/undefined.jpg" alt="" class="circle">
-            <span class="title">Usuario </span>
-            <p>
-              Comentario
-            </p>
-            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-          </li>
 
       </ul>
     </main>
@@ -77,15 +69,29 @@
     $('#nav').load('nav.html');
 
     $.get('/post/'+parametro+'.json',function(data){
-      console.log(data);
-      $('.imagem-descricao img').attr('src','post/'+parametro+'.jpg');
-      $('.imagem-descricao #descricao').html(data.texto);
-      $('.post-inf h1').html(data.titulo);
 
+      console.log(data);
+      $('.imagem-descricao #descricao').html(data.texto);
       ler.idToUser(data.inf.por,function(ret){
         console.log(ret);
         $('.post-inf footer> p').html('<a href="perfil.html?'+data.inf.por+'">~'+ret+'</a>');
       });
+
+      $.get('post/'+parametro+'.jpg',function(data) {
+        if(data != '') $('.imagem-descricao img').attr('src','post/'+parametro+'.jpg');
+        else {
+          $('.imagem-descricao img').remove();
+          $('.descricao-holder').css({
+            'position': 'static',
+            'opacity': 1
+          });
+        }
+      });
+
+
+      $('.post-inf h1').html(data.titulo);
+
+
     });
 
     function updateComments(){
@@ -100,10 +106,25 @@
       $.get('/post/'+parametro+'.val',function(data){
         comentarios = data.comentarios;
         if(!compareArray(comentarios, cache_com)){
+          $('.comentarios').html();
           cache_com = comentarios;
           for (let com of comentarios) {
-            let
-            console.log('+'+com);
+
+            $.get('post/'+com+'.json',function(data){
+
+              $.get('comentarios.html',function(formato){
+                let $html = $($.parseHTML(formato));
+                $html.find('p').html(data.texto);
+                console.log($html);
+                ler.idToUser(data.inf.por,function(usuario){
+                  $html.find('span').html(usuario);
+                });
+
+                $('.comentarios').append($html);
+              });
+
+            });
+
           }
         }
       });

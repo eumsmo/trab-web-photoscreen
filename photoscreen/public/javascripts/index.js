@@ -26,7 +26,11 @@ $('#options-icon').click(function(){
 
 $('#nav').load('nav.html');
 
-loadPost(1,function(data){
-  console.log(data);
-
+searchPosts(function(posts){
+  for (let post of posts) {
+    console.log('a');
+    loadPost(post,function(data){
+      console.log(data);
+    });
+  }
 });

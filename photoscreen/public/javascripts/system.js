@@ -99,7 +99,7 @@ class ler{
     $.get(link, function(ret){
       let obj = {
         texto: ret.texto,
-        por: ret.inf.por,
+        por: ler.idToUser(ret.inf.por),
         onde: ret.inf.onde,
         id: ret.id
       };
@@ -134,42 +134,56 @@ class ler{
 }
 
 function loadPost(postId,callback){
-  $('.post-hold').load('posts.html?'+postId+' main.post-holder',function(){
-    let created = $(this);
-    created.find('main.post-holder').addClass('floating');
-    created.find('.imagem-descricao p').css('border-radius',$('.imagem-descricao img').css('border-radius'));
-    created.find('.imagem-descricao p').css('height',$('.imagem-descricao img').css('height'));
-    created.find('.imagem-descricao').click(function(){
-      location.assign('posts.html?'+postId);
-    });
-    $('.interacao p').click(function(){
-      if($(this).hasClass('curtir')){
-        console.log('call curtir');
-        $(this).find('i.material-icons').html('favorite_border');
-      }
-      else if($(this).hasClass('comentar')){
-        console.log('call comentar');
-      }
-    });
+  const encontrarPost = 'main.post-holder';
 
-    $.get('/post/'+postId+'.json',function(data){
-      console.log(data);
-      created.find('.imagem-descricao img').attr('src','post/'+postId+'.jpg');
-      created.find('.imagem-descricao #descricao').html(data.texto);
-      created.find('.post-inf h1').html(data.titulo);
+  $.get('posts.html?'+postId,function(data){
+    let html = $.parseHTML(data),
+        $created = $(html).find(encontrarPost),
+        $newHolder = $('<div class="col s3">\n<div class="card">\n<div class="post-hold">\n</div>\n</div>\n</div>');
 
-      ler.idToUser(data.inf.por,function(ret){
-        console.log(ret);
-        created.find('.post-inf footer> p').html('<a href="perfil.html?'+data.inf.por+'">~'+ret+'</a>');
-      });
 
-    });
+        $created.find('main.post-holder').addClass('floating');
+        $created.find('.imagem-descricao p').css('border-radius',$('.imagem-descricao img').css('border-radius'));
+        $created.find('.imagem-descricao p').css('height',$('.imagem-descricao img').css('height'));
+        $created.find('.imagem-descricao').click(function(){
+          location.assign('posts.html?'+postId);
+        });
 
-    callback(this);
+        $('.interacao p').click(function(){
+          if($(this).hasClass('curtir')){
+            console.log('call curtir');
+            $(this).find('i.material-icons').html('favorite_border');
+          }
+          else if($(this).hasClass('comentar')){
+            console.log('call comentar');
+          }
+        });
+
+        $.get('/post/'+postId+'.json',function(data){
+          console.log(data);
+          $created.find('.imagem-descricao img').attr('src','post/'+postId+'.jpg');
+          $created.find('.imagem-descricao #descricao').html(data.texto);
+          $created.find('.post-inf h1').html(data.titulo);
+
+          ler.idToUser(data.inf.por,function(ret){
+            console.log(ret);
+            $created.find('.post-inf footer> p').html('<a href="perfil.html?'+data.inf.por+'">~'+ret+'</a>');
+          });
+
+        });
+        $created.addClass('floating');
+        $newHolder.find('.post-hold').append($created);
+        $('body main .row').append($newHolder);
+
   });
-
 }
 
+function searchPosts(callback){
+  $.get('/search/posts/all/all',function(data){
+    if(!data[0]) throw data[1];
+    else callback(data[1]);
+  });
+}
 
 function helpServerOut(){
   let obj ={

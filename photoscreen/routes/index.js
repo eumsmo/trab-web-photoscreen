@@ -484,6 +484,22 @@ router.post('/descurtir',function(req,res,next){
   });
 });
 
+router.get('/search/posts/:what/:id',function(req,res,next){
+  let what = req.params.what;
+
+  if(what == 'all'){
+    models.post.find({"inf.tipo": 'post'},"id",function(err,posts){
+      let all = [];
+      if(err) res.send([false,err]);
+      else {
+        for (let post of posts)
+          all.push(post.id);
+        res.send([true,all]);
+      }
+    });
+  }
+});
+
 /* CONTROLE POR GET */
 router.get('/:what/:id.:type',function(req,res,next){
   let id = req.params.id,

@@ -6,7 +6,7 @@ const OBJ_ACCOUNT = (localStorage.getItem('data') != null)?   JSON.parse( atob(l
 if(OBJ_ACCOUNT == undefined){
   RES = 'YourSelf';
   console.log('Logado em: '+RES);
-  //if(window.location.pathname != '/login.html' && window.location.pathname != '/pagina_inicial.html') window.location.assign('/pagina_inicial.html');
+  if(window.location.pathname != '/login.html' && window.location.pathname != '/pagina_inicial.html') window.location.assign('/pagina_inicial.html');
 } else{
   //Função que irá iniciar quando o resultado da tentativa de login for retornado;
   login(function(resultado){
@@ -14,7 +14,7 @@ if(OBJ_ACCOUNT == undefined){
     console.log('Logado em: '+RES);
   },OBJ_ACCOUNT,function(data){
     console.log(data);
-  //  if(window.location.pathname != '/login.html' && window.location.pathname != '/pagina_inicial.html') window.location.assign('/pagina_inicial.html');
+    if(window.location.pathname != '/login.html' && window.location.pathname != '/pagina_inicial.html') window.location.assign('/pagina_inicial.html');
   });
 }
 
