@@ -131,6 +131,12 @@ class ler{
       callback(data);
     });
   }
+
+  static profilePic(id,callback){
+    $.get('/get/foto_perfil/'+id,function(data){
+      callback(data);
+    });
+  }
 }
 
 function loadPost(postId,callback){
@@ -191,4 +197,13 @@ function helpServerOut(){
     senha: 'admin'
   };
   localStorage.setItem('data', btoa(JSON.stringify(obj)));
+}
+
+function navValues(obj){
+  ler.idToUser(obj.user,function(a){
+      $('p#nome-usuario').html(a);
+  });
+  ler.profilePic(obj.user,function(a){
+    $('#foto-usuario')[0].src = a;
+  });
 }

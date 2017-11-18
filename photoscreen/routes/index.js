@@ -35,9 +35,16 @@ router.get('/get/:what/:id',function(req,res,next){
   }
 
   if(what == 'nome'){
-    models.userInf.find({id: id},'',function(err,data){
+    models.userInf.find({id: id},'inf.nome',function(err,data){
       if(err || data[0] == undefined) res.send(false);
       else res.send(data[0].inf.nome);
+    });
+  }
+
+  if(what == 'foto_perfil'){
+    models.userInf.find({id: id},'inf.foto_perfil',function(err,data){
+      if(err || data[0] == undefined) res.send(false);
+      else res.send(data[0].inf.foto_perfil);
     });
   }
 
@@ -48,7 +55,7 @@ function login(require,callback){
   console.log(require);
   let userId = require.user;
 
-  if(Number(userId) == NaN){
+  if(isNaN(Number(userId))){
     console.log(userId);
     getIdbyString(userId,function(data){
       if(data[0]){
@@ -64,6 +71,7 @@ function login(require,callback){
 
   // Função, vulgo resto do codigo.
   function continuarLogin(){
+    console.log('id: '+userId);
     userId = Number(userId);
 
     // Procura um usuario com mesmo nome que o parametro.nome

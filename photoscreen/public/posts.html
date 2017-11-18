@@ -106,7 +106,7 @@
       $.get('/post/'+parametro+'.val',function(data){
         comentarios = data.comentarios;
         if(!compareArray(comentarios, cache_com)){
-          $('.comentarios').html();
+          $('ul.comentarios').html('');
           cache_com = comentarios;
           for (let com of comentarios) {
 

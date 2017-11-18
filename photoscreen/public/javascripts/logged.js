@@ -12,6 +12,7 @@ if(OBJ_ACCOUNT == undefined){
   login(function(resultado){
     RES = resultado;
     console.log('Logado em: '+RES);
+    navValues(OBJ_ACCOUNT);
   },OBJ_ACCOUNT,function(data){
     console.log(data);
     if(window.location.pathname != '/login.html' && window.location.pathname != '/pagina_inicial.html') window.location.assign('/pagina_inicial.html');
