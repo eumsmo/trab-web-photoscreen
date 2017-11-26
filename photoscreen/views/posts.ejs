@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/materialize.css" >
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  </head>
+  <body>
+
+    <main class="card"> <!-- post-principal -->
+      <main class="post-holder">
+        <div class="post-imagem ">
+
+          <section class="imagem-descricao">
+            <img src='<%= image %>'>
+            <div class="descricao-holder">
+
+              <p id="descricao"><%= texto %></p>
+            </div>
+
+          </section>
+
+          <section class="post-inf">
+            <h1><%= titulo %></h1>
+            <footer>
+              <p><a href="perfil.html?<%=id%>">~<%= usuario %></a></p>
+              <div class="interacao">
+                <p class="curtir"><i class="material-icons small">favorite</i> Curtir </p>
+                <p class="comentar"><i class="material-icons small">mode_comment</i> Comentarios </p>
+              </div>
+            </footer>
+
+          </section>
+
+        </div>
+      </main>
+    </main>
+  </body>
+</html>

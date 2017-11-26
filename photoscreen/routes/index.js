@@ -12,8 +12,42 @@ let models = {
       userInf: require('./../model/user_inf')()
     };
 
+function getInformation(what,inf,callback){
+  if(what == 'user'){
+    models.userInf.find({id: inf.id},function(err,user){
+      if(err) callback(err);
+      if(user[0] == undefined) callback(user[0]);
+      else callback(user[0].inf);
+    });
+  }
+  else if(what = 'post'){
+    models.post.find({id: inf.id},function(err,post){
+      if(err) callback(err);
+      if(post[0] == undefined) callback(post[0]);
+      else{
+        switch (inf.what) {
+          case 'inf':
+            callback(post[0].inf);
+            break;
+          case 'val':
+            callback(post[0].interacao);
+            break;
+          case 'json':
+            post[0].url = undefined;
+            callback(post[0]);
+            break;
+          case 'jpeg':
+          case 'jpg':
+          case 'file':
+            if(post[0].url == undefined) callback(undefined);
+            else callback(post[0].url);
+            break;
+        }
+      }
+    });
+  }
 
-
+}
 function getIdbyString(string,callback){
   models.login.find({$or: [{nome: string}, {email: string}]}, function(err,data){
     if(err) callback([false,"Erro durante processo"]);
@@ -21,36 +55,6 @@ function getIdbyString(string,callback){
     else callback([true,data[0].id]);
   });
 }
-
-router.get('/get/:what/:id',function(req,res,next){
-  let what = req.params.what,
-      id = req.params.id;
-  console.log(what);
-  console.log(id);
-  if(what == 'id'){
-    getIdbyString(id,function(data){
-      if(data[0]) res.send(String(data[1]));
-      else res.send(false);
-    });
-  }
-
-  if(what == 'nome'){
-    models.userInf.find({id: id},'inf.nome',function(err,data){
-      if(err || data[0] == undefined) res.send(false);
-      else res.send(data[0].inf.nome);
-    });
-  }
-
-  if(what == 'foto_perfil'){
-    models.userInf.find({id: id},'inf.foto_perfil',function(err,data){
-      if(err || data[0] == undefined) res.send(false);
-      else res.send(data[0].inf.foto_perfil);
-    });
-  }
-
-})
-
-/* FUNCTION login */
 function login(require,callback){
   console.log(require);
   let userId = require.user;
@@ -91,12 +95,7 @@ function login(require,callback){
 
 }
 
-/* FUNCTION postCategorias */
-function postCategorias(arrayCateg,postId,require,callback){
-
-}
-
-/* FUNCTION post pertence a usuario */
+/* POST FUNCTIONS*/
 function pertenceUsuario(require, id, callback){
   login(require,function(returned){
     if(!returned[0]){callback([false,"Login errado"]); return;}
@@ -110,8 +109,6 @@ function pertenceUsuario(require, id, callback){
     });
   });
 }
-
-/* FUNCTION alterarPost */
 function alterarPost(postId, obj,require, callback){
   pertenceUsuario(require, postId, function(data){
     if(!data[0]){ callback(data); return;}
@@ -133,92 +130,6 @@ function alterarPost(postId, obj,require, callback){
     });
   });
 }
-
-/* GET home page.  */
-router.get('/', function(req, res, next) {
-    res.sendFile(path.join(__dirname+'/../public/index.html'));
-});
-
-/* GET login page */
-router.get('/login', function(req, res, next) {
-    res.sendFile(path.join(__dirname+'/../public/login.html'));
-});
-
-/* GET singup page */
-router.get('/cadastro', function(req, res, next) {
-  res.sendFile(path.join(__dirname+'/../public/inscrever.html'));
-});
-
-
-/* LOGIN - INSCREVER */
-
-  /* POST dados de login */
-  router.post('/login_dados',function(req,res,next){
-    let dados = req.body;
-
-    // Inicia a função login com os dados de login
-    login(dados,function(result){
-
-      //Retorna ao usuario o valor retornado por callback
-      res.send(result);
-    });
-
-  });
-
-  /* POST dados de inscrição */
-  router.post('/inscrever_dados', function(req, res, next) {
-    let dados = req.body,
-        nome = dados.nome;
-
-    // Procura usuario com o nome enviado...
-    models.login.find({nome: nome},function(error, val){
-      if(error) {
-        res.send([false,error,"1"]);
-        return;
-      }
-
-      // Caso houver um usuario com o mesmo nome, retorna falso, caso o contrario, continua.
-      if(val.length) res.send([false,"Usuario já existe!","2"]);
-      else{
-
-        // Cria o usuario com as informações (nome, email e senha).
-          models.login.create(dados, function(err,logged){
-            if(err) {
-              res.send([false,err,"4"]);
-              return;
-            }
-
-            // Cria dados "default" para o usuario
-            let defaultInf = {
-                nome: logged.nome,
-                foto_perfil: '/images/undefined.jpg',
-                seguindo: [],
-                seguidores: [],
-                interesses: [],
-                pics: []
-            };
-
-            // Organiza o modelo com o id e as informações
-            let model = {id: logged.id, inf: defaultInf, extras: {}};
-
-            // Coloca dados no MongoDB
-            models.userInf.create(model,function(err, returned){
-              if(err) res.send([false,err,"5"]);
-
-              // Retorna os dados para o usuario.
-              res.send([true,returned]);
-            });
-
-          });
-      }
-    });
-
-  });
-
-
-/* UPLOAD DE FOTO */
-
-
 function postAPost(require, content, callback){
   /* Testa login */
   login(require,function(result){
@@ -241,23 +152,6 @@ function postAPost(require, content, callback){
     });
   });
 }
-/* POST post */
-router.post('/post',function(req,res,next){
-  let require = JSON.parse(req.body.require),
-      content = JSON.parse(req.body.content);
-
-  content.interacao = {
-    curtidas: [],
-    compartilhadas: [],
-    comentarios: []
-  };
-
-
-  postAPost(require,content, function(data){
-    res.send(data);
-  });
-});
-
 function deleteAPost(require, id, callback){
   /* LOGA NA CONTA E PEGA ID */
   login(require,function(data){
@@ -280,7 +174,6 @@ function deleteAPost(require, id, callback){
     });
   })
 }
-
 function deleteComentario(require, id, callback){
   /* PEGAR ID DO USUARIO */
   login(require,function(data){
@@ -314,7 +207,138 @@ function deleteComentario(require, id, callback){
   });
 }
 
-/* POST deletar post/comentario */
+/* GET POST/COMENTARIO */
+    router.get('/posts/:id',function(req,res,next){
+      let id = req.params.id;
+      getInformation('post',{id: id,what: 'json'},function(resPost){
+        if(resPost.inf.tipo != 'post'){
+          res.sendStatus(400);
+          return;
+        }
+        let texto = resPost.texto,
+            titulo = resPost.titulo,
+            usuarioId = resPost.inf.por;
+
+        getInformation('user',{id:usuarioId},function(resUsuario){
+          let usuarioNome = resUsuario.nome;
+
+          getInformation('post',{id:id, what: 'file'},function(resImg){
+            let imagem = (resImg)? '/post/'+id+'.file' : '/images/undefined.jpg';
+            res.render('posts.ejs',{image: imagem, texto: texto, titulo: titulo, usuario: usuarioNome,id: usuarioId});
+          });
+        });
+      });
+
+
+
+    });
+    router.get('/comentario/:id',function(req,res,next){
+      let id = req.params.id;
+      getInformation('post',{id: id,what: 'json'},function(resPost){
+        if(resPost.inf.tipo != 'comentario'){
+          res.sendStatus(400);
+          return;
+        }
+        let texto = resPost.texto,
+            usuarioId = resPost.inf.por;
+
+        getInformation('user',{id:usuarioId},function(resUsuario){
+          let usuarioNome = resUsuario.nome;
+          res.render('comentario.ejs',{texto: texto,id: usuarioId,usuario: usuarioNome});
+        });
+      });
+    });
+
+/* LOGIN E CADASTRO */
+    router.post('/login_dados',function(req,res,next){
+      let dados = req.body;
+
+      // Inicia a função login com os dados de login
+      login(dados,function(result){
+
+        //Retorna ao usuario o valor retornado por callback
+        res.send(result);
+      });
+
+    });
+    router.post('/inscrever_dados', function(req, res, next) {
+      let dados = req.body,
+          nome = dados.nome;
+
+      // Procura usuario com o nome enviado...
+      models.login.find({nome: nome},function(error, val){
+        if(error) {
+          res.send([false,error,"1"]);
+          return;
+        }
+
+        // Caso houver um usuario com o mesmo nome, retorna falso, caso o contrario, continua.
+        if(val.length) res.send([false,"Usuario já existe!","2"]);
+        else{
+
+          // Cria o usuario com as informações (nome, email e senha).
+            models.login.create(dados, function(err,logged){
+              if(err) {
+                res.send([false,err,"4"]);
+                return;
+              }
+
+              // Cria dados "default" para o usuario
+              let defaultInf = {
+                  nome: logged.nome,
+                  foto_perfil: '/images/undefined.jpg',
+                  seguindo: [],
+                  seguidores: [],
+                  interesses: [],
+                  pics: []
+              };
+
+              // Organiza o modelo com o id e as informações
+              let model = {id: logged.id, inf: defaultInf, extras: {}};
+
+              // Coloca dados no MongoDB
+              models.userInf.create(model,function(err, returned){
+                if(err) res.send([false,err,"5"]);
+
+                // Retorna os dados para o usuario.
+                res.send([true,returned]);
+              });
+
+            });
+        }
+      });
+
+    });
+
+/* REDIRECTS */
+    router.get('/', function(req, res, next) {
+  res.sendFile(path.join(__dirname+'/../public/index.html'));
+});
+    router.get('/login', function(req, res, next) {
+            res.sendFile(path.join(__dirname+'/../public/login.html'));
+        });
+    router.get('/cadastro', function(req, res, next) {
+    res.sendFile(path.join(__dirname+'/../public/inscrever.html'));
+  });
+
+/* {require: '{user,pass}' , content: '{}'}*/
+router.post('/post',function(req,res,next){
+
+  let require = JSON.parse(req.body.require),
+      content = JSON.parse(req.body.content);
+
+  content.interacao = {
+    curtidas: [],
+    compartilhadas: [],
+    comentarios: []
+  };
+
+
+  postAPost(require,content, function(data){
+    res.send(data);
+  });
+});
+
 /* { require : '{ user , pass }' , id }*/
 router.post('/delete_:what',function(req,res,next){
   let require = JSON.parse(req.body.require);
@@ -348,7 +372,7 @@ router.post('/delete_:what',function(req,res,next){
 
 });
 
-/* POST comentar */
+/* { require : '{ user , pass }' , comentario: '', id }*/
 router.post('/comentar',function(req,res,next){
   let require = JSON.parse(req.body.require);
 
@@ -378,9 +402,11 @@ router.post('/comentar',function(req,res,next){
   });
 });
 
+/* {require: '{user, pass}, conteudo: '{}', what, }*/
 router.post('/alterar',function(req,res,next){
+  if(req.body.conteudo == undefined || req.body.require == undefined || req.body.what == undefined) return;
+  
   let loginReq = JSON.parse(req.body.require);
-
   login(loginReq,function(data){
     if(!data[0]){ res.send(data); return;}
     let oque = req.body.what,
@@ -405,81 +431,72 @@ router.post('/alterar',function(req,res,next){
         console.log(conteudo);
         models.userInf.findOneAndUpdate({id: data[1]},conteudo, function(err,retornado){
           if(err) res.send([false,err]);
-          else res.send([true, retornado])
+          else res.send([true, retornado]);
         });
     }
   });
 });
 
-/* POST seguir */
-/* { require : '{ user , pass }' , id } */
-router.post('/seguir',function(req,res,next){
-  let require = JSON.parse(req.body.require);
 
-  login(require,function(data){
-    if(!data[0]){ res.send(data); return;}
-    models.userInf.find({ id: req.body.id},"inf.seguidores", function(err,inf){
-      if(err){ res.send([false,err]); return;}
-      else if(inf[0] == undefined){res.send([false,"Usuario não existe"]); return;}
+    /* { require : '{ user , pass }' , id } */
+    router.post('/seguir',function(req,res,next){
+      let require = JSON.parse(req.body.require);
 
-      let comIndex = inf[0].inf.seguidores.indexOf(data[1]);
-
-      if(comIndex < 0){
-        models.userInf.findOneAndUpdate({id: req.body.id},{ $push: {"inf.seguidores": data[1]}}, function(err){
+      login(require,function(data){
+        if(!data[0]){ res.send(data); return;}
+        models.userInf.find({ id: req.body.id},"inf.seguidores", function(err,inf){
           if(err){ res.send([false,err]); return;}
-          models.userInf.findOneAndUpdate({id: data[1]},{ $push: {"inf.seguindo": req.body.id}}, function(err,data){
+          else if(inf[0] == undefined){res.send([false,"Usuario não existe"]); return;}
+
+          let comIndex = inf[0].inf.seguidores.indexOf(data[1]);
+
+          if(comIndex < 0){
+            models.userInf.findOneAndUpdate({id: req.body.id},{ $push: {"inf.seguidores": data[1]}}, function(err){
+              if(err){ res.send([false,err]); return;}
+              models.userInf.findOneAndUpdate({id: data[1]},{ $push: {"inf.seguindo": req.body.id}}, function(err,data){
+                if(err) res.send([false,err]);
+                else res.send([true,data]);
+              });
+            });
+          }
+        });
+      });
+    });
+    router.post('/desseguir',function(req,res,next){
+      let require = JSON.parse(req.body.require);
+
+      login(require,function(data){
+        if(!data[0]){ res.send(data); return;}
+
+        models.userInf.findOneAndUpdate({id: req.body.id},{$pull: {"inf.seguidores": data[1]}},function(err){
+          if(err){ res.send([false,err]); return;}
+          models.userInf.findOneAndUpdate({id: data[1]},{$pull: {"inf.seguindo": req.body.id}},function(err,data){
             if(err) res.send([false,err]);
             else res.send([true,data]);
           });
         });
-      }
-    });
-  });
-});
-
-/* POST parar de seguir */
-/* { require : '{ user , pass }' , id } */
-router.post('/desseguir',function(req,res,next){
-  let require = JSON.parse(req.body.require);
-
-  login(require,function(data){
-    if(!data[0]){ res.send(data); return;}
-
-    models.userInf.findOneAndUpdate({id: req.body.id},{$pull: {"inf.seguidores": data[1]}},function(err){
-      if(err){ res.send([false,err]); return;}
-      models.userInf.findOneAndUpdate({id: data[1]},{$pull: {"inf.seguindo": req.body.id}},function(err,data){
-        if(err) res.send([false,err]);
-        else res.send([true,data]);
       });
     });
-  });
-});
+    router.post('/curtir',function(req,res,next){
+      let require = JSON.parse(req.body.require);
 
-/* POST curtir */
-/* { require : '{ user , pass }' , id } */
-router.post('/curtir',function(req,res,next){
-  let require = JSON.parse(req.body.require);
+      login(require,function(data){
+        if(!data[0]){ res.send(data); return;}
+        models.post.find({ id: req.body.id},"interacao.curtidas", function(err,inf){
+          if(err){ res.send([false,err]); return;}
+          else if(inf[0] == undefined){res.send([false,"post não existe"]); return;}
+          let comIndex = inf[0].interacao.curtidas.indexOf(data[1]);
 
-  login(require,function(data){
-    if(!data[0]){ res.send(data); return;}
-    models.post.find({ id: req.body.id},"interacao.curtidas", function(err,inf){
-      if(err){ res.send([false,err]); return;}
-      else if(inf[0] == undefined){res.send([false,"post não existe"]); return;}
-      let comIndex = inf[0].interacao.curtidas.indexOf(data[1]);
-
-      if(  comIndex < 0){
-        models.post.findOneAndUpdate({id: req.body.id},{ $push: {"interacao.curtidas": data[1]}}, function(err,data){
-          if(err) res.send([false,err]);
-          else res.send([true,data]);
+          if(  comIndex < 0){
+            models.post.findOneAndUpdate({id: req.body.id},{ $push: {"interacao.curtidas": data[1]}}, function(err,data){
+              if(err) res.send([false,err]);
+              else res.send([true,data]);
+            });
+          }
         });
-      }
+      });
     });
-  });
-});
-
-/* POST descurtir */
-/* { require : '{ user , pass }' , id } */
-router.post('/descurtir',function(req,res,next){
+    router.post('/descurtir',function(req,res,next){
   let require = JSON.parse(req.body.require);
 
   login(require,function(data){
@@ -516,49 +533,60 @@ router.get('/:what/:id.:type',function(req,res,next){
       send;
       console.log(req.params);
   if(what == 'post'){
-    models.post.find({id: id},function(err,post){
-
-      if(err) {
-        res.send(err);
-        return;
-      }
-
-      if(type == 'jpg' || type == 'jpeg'){
-        if(!post[0] || !post[0].url){res.send(); return;}
-        let data = post[0].url.replace("data:image/jpeg;base64,",''),
+    if(type == 'jpg' || type == 'jpeg' || type == 'file'){
+      getInformation(what,{id:id, what: 'file'},function(result){
+        if (result == undefined){
+          res.send(undefined);
+          return;
+        }
+        let data = result.replace("data:image/jpeg;base64,",''),
             imagem = Buffer.from(data,'base64');
 
         res.writeHead(200, {'Content-Type': 'image/jpeg','Content-Length': imagem.length});
         res.write(imagem);
         res.end();
-
-      }
-      else if(type == 'inf'){
-        if(post[0] != undefined)
-          res.send(post[0].inf);
-      }
-      else if(type == 'val'){
-        if(post[0] != undefined)
-          res.send(post[0].interacao);
-      }
-      else if(type == 'json'){
-        let json = post[0];
-        if(json != undefined) json.url = undefined;
-        res.send(json);
-      }
-
-    });
+      });
+    }
+    else{
+      getInformation(what,{id: id, what: type},function(result){
+        res.send(result);
+      });
+    }
   }
   if( what == 'users'){
-    models.userInf.find({id: id},function(err,user){
-      if(err) res.send(err);
-      if(user[0] == undefined) res.send(user[0]);
-      else res.send(user[0].inf);
+    getInformation('user',{id: id},function(result){
+      res.send(result);
     });
   }
 
 });
+router.get('/get/:what/:id',function(req,res,next){
+  let what = req.params.what,
+      id = req.params.id;
+  console.log(what);
+  console.log(id);
+  if(what == 'id'){
+    getIdbyString(id,function(data){
+      if(data[0]) res.send(String(data[1]));
+      else res.send(false);
+    });
+  }
 
+  if(what == 'nome'){
+    models.userInf.find({id: id},'inf.nome',function(err,data){
+      if(err || data[0] == undefined) res.send(false);
+      else res.send(data[0].inf.nome);
+    });
+  }
+
+  if(what == 'foto_perfil'){
+    models.userInf.find({id: id},'inf.foto_perfil',function(err,data){
+      if(err || data[0] == undefined) res.send(false);
+      else res.send(data[0].inf.foto_perfil);
+    });
+  }
+
+});
 
 
 /* PESQUISAR POST POR */

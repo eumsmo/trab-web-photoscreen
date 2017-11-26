@@ -28,7 +28,7 @@ $('#nav').load('nav.html');
 
 searchPosts(function(posts){
   for (let post of posts) {
-    console.log('a');
+    console.log(post);
     loadPost(post,function(data){
       console.log(data);
     });

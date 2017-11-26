@@ -15,32 +15,7 @@
     </nav>
 
     <main class="post-principal card">
-      <main class="post-holder ">
-        <div class="post-imagem ">
 
-          <section class="imagem-descricao">
-            <img src='images/undefined.jpg'>
-            <div class="descricao-holder">
-
-              <p id="descricao">EU SOU UM TEXTO E EU DEVIA TÁ CENTRALIZADO</p>
-            </div>
-
-          </section>
-
-          <section class="post-inf">
-            <h1> TITULO AQUI</h1>
-            <footer>
-              <p>~usuario aqui</p>
-              <div class="interacao">
-                <p class="curtir"><i class="material-icons small">favorite</i> Curtir </p>
-                <p class="comentar"><i class="material-icons small">mode_comment</i> Comentarios </p>
-              </div>
-            </footer>
-
-          </section>
-
-        </div>
-      </main>
     </main>
 
     <main class="container">
@@ -71,26 +46,19 @@
     $.get('/post/'+parametro+'.json',function(data){
 
       console.log(data);
-      $('.imagem-descricao #descricao').html(data.texto);
-      ler.idToUser(data.inf.por,function(ret){
-        console.log(ret);
-        $('.post-inf footer> p').html('<a href="perfil.html?'+data.inf.por+'">~'+ret+'</a>');
+      $.get('posts/'+parametro,function(data){
+        $('.post-principal.card').html(data);
+
+        $('.interacao p').click(function(){
+            if($(this).hasClass('curtir')){
+            console.log('call curtir');
+            $(this).find('i.material-icons').html('favorite_border');
+          }
+          else if($(this).hasClass('comentar')){
+            console.log('call comentar');
+          }
+        });
       });
-
-      $.get('post/'+parametro+'.jpg',function(data) {
-        if(data != '') $('.imagem-descricao img').attr('src','post/'+parametro+'.jpg');
-        else {
-          $('.imagem-descricao img').remove();
-          $('.descricao-holder').css({
-            'position': 'static',
-            'opacity': 1
-          });
-        }
-      });
-
-
-      $('.post-inf h1').html(data.titulo);
-
 
     });
 
@@ -103,28 +71,19 @@
         return true;
       }
 
+      //Pega Comentarios por AJAX metodo GET
       $.get('/post/'+parametro+'.val',function(data){
         comentarios = data.comentarios;
+
+        //Compara se comentarios mudaram
         if(!compareArray(comentarios, cache_com)){
+          //Se mudaram, limpa todos os comentarios e carrega denovo
           $('ul.comentarios').html('');
           cache_com = comentarios;
           for (let com of comentarios) {
-
-            $.get('post/'+com+'.json',function(data){
-
-              $.get('comentarios.html',function(formato){
-                let $html = $($.parseHTML(formato));
-                $html.find('p').html(data.texto);
-                console.log($html);
-                ler.idToUser(data.inf.por,function(usuario){
-                  $html.find('span').html(usuario);
-                });
-
-                $('.comentarios').append($html);
-              });
-
+            $.get('comentario/'+com,function(data){
+              $('.comentarios').append(data);
             });
-
           }
         }
       });

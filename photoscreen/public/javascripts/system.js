@@ -48,6 +48,7 @@ function login(result,request,wrong = new Function()){
 }
 
 function postByInput(input, conteudo, informacao, request,func){
+
   carregaImagem(input,function(data){
     informacao.tipo = 'post';
     conteudo.url = data;
@@ -108,6 +109,8 @@ class ler{
     });
   }
 
+
+  /* IGNORAR POR AGORA */
   static texto(string, callback){
     //Separar as palavras de um texto/string
     let array = string.split(' ');
@@ -119,7 +122,7 @@ class ler{
       if(palavra[0] == '@'){
         let param = palavra.slice(1);
         $.get('/get/user/'+param, function(data){
-
+            //Continuar *marcação*
         });
       }
     }
@@ -142,45 +145,28 @@ class ler{
 function loadPost(postId,callback){
   const encontrarPost = 'main.post-holder';
 
-  $.get('posts.html?'+postId,function(data){
+  $.get('posts/'+postId,function(data){
     let html = $.parseHTML(data),
         $created = $(html).find(encontrarPost),
         $newHolder = $('<div class="col s3">\n<div class="card">\n<div class="post-hold">\n</div>\n</div>\n</div>');
 
+    $created.find('section.post-inf').dblclick(function(){
+        window.location.assign('posts.html?'+postId);
+    });
 
-        $created.find('main.post-holder').addClass('floating');
-        $created.find('.imagem-descricao p').css('border-radius',$('.imagem-descricao img').css('border-radius'));
-        $created.find('.imagem-descricao p').css('height',$('.imagem-descricao img').css('height'));
-        $created.find('.imagem-descricao').click(function(){
-          location.assign('posts.html?'+postId);
-        });
-
-        $('.interacao p').click(function(){
-          if($(this).hasClass('curtir')){
-            console.log('call curtir');
-            $(this).find('i.material-icons').html('favorite_border');
-          }
-          else if($(this).hasClass('comentar')){
-            console.log('call comentar');
-          }
-        });
-
-        $.get('/post/'+postId+'.json',function(data){
-          console.log(data);
-          $created.find('.imagem-descricao img').attr('src','post/'+postId+'.jpg');
-          $created.find('.imagem-descricao #descricao').html(data.texto);
-          $created.find('.post-inf h1').html(data.titulo);
-
-          ler.idToUser(data.inf.por,function(ret){
-            console.log(ret);
-            $created.find('.post-inf footer> p').html('<a href="perfil.html?'+data.inf.por+'">~'+ret+'</a>');
-          });
-
-        });
-        $created.addClass('floating');
-        $newHolder.find('.post-hold').append($created);
-        $('body main .row').append($newHolder);
-
+    $created.find(encontrarPost).addClass('floating');
+    $created.addClass('floating');
+    $newHolder.find('.post-hold').append($created);
+    $('body main .row').append($newHolder);
+    $('.interacao p').click(function(){
+        if($(this).hasClass('curtir')){
+        console.log('call curtir');
+        $(this).find('i.material-icons').html('favorite_border');
+      }
+      else if($(this).hasClass('comentar')){
+        console.log('call comentar');
+      }
+    });
   });
 }
 
