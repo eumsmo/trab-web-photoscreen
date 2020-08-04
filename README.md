@@ -1,5 +1,6 @@
 # Aplicação Web - PhotoShot
 Repositorio com os arquivos da aplicação web + back-end.
+OBS: esse trem tá todo errado eu peço que vocês não me julguem eu não sabia o que eu tava fazendo obrigado
 
 ## Diretórios:
 * **/:** Diretório gerado com *express-generator* e adição de diretórios extras
